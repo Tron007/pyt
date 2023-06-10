@@ -1,0 +1,87 @@
+class MealyError(Exception):
+    pass
+
+
+class MealyFiniteStateMachine:
+    def __init__(self):
+        self.state = 'A'
+
+    def play(self):
+        if self.state == 'B':
+            self.state = 'C'
+            return 2
+        elif self.state == 'D':
+            return 6
+        elif self.state == 'E':
+            self.state = 'F'
+            return 7
+        else:
+            raise MealyError('play')
+
+    def print(self):
+        if self.state == 'A':
+            return 1
+        elif self.state == 'C':
+            self.state = 'D'
+            return 4
+        elif self.state == 'E':
+            self.state = 'C'
+            return 8
+        elif self.state == 'F':
+            self.state = 'G'
+            return 9
+        elif self.state == 'J':
+            return 9
+        else:
+            raise MealyError('print')
+
+    def slip(self):
+        if self.state == 'A':
+            self.state = 'B'
+            return 0
+        elif self.state == 'B':
+            self.state = 'F'
+            return 3
+        elif self.state == 'D':
+            self.state = 'E'
+            return 5
+        else:
+            raise MealyError('slip')
+
+
+def raises(func, error):
+    output = None
+    try:
+        output = func()
+    except Exception as e:
+        assert type(e) == error
+    assert output is None
+
+
+def test():
+    obj = main()
+    assert obj.print() == 1
+    assert obj.slip() == 0
+    assert obj.play() == 2
+    assert obj.print() == 4
+    assert obj.play() == 6
+    assert obj.slip() == 5
+    assert obj.print() == 8
+    assert obj.print() == 4
+    assert obj.slip() == 5
+    assert obj.play() == 7
+    assert obj.print() == 9
+    obj = main()
+    assert obj.slip() == 0
+    assert obj.slip() == 3
+    assert obj.print() == 9
+    raises(lambda: obj.play(), MealyError)
+    raises(lambda: obj.print(), MealyError)
+    raises(lambda: obj.slip(), MealyError)
+
+
+def main():
+    return MealyFiniteStateMachine()
+
+
+test()
