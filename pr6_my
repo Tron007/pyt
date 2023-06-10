@@ -1,0 +1,56 @@
+def main(x):
+    if x[1] == 1975:
+        return process_case_1975(x)
+    elif x[1] == 1992:
+        return process_case_1992(x)
+    return 13
+
+
+def process_case_1975(x):
+    if x[3] == "RUBY":
+        return process_case_1975_ruby(x)
+    elif x[3] == "MIRAH":
+        return process_case_1975_mirah(x)
+
+
+def process_case_1975_ruby(x):
+    if x[0] == 1966:
+        return 0
+    elif x[0] == 1981:
+        return 1
+    elif x[0] == 1972:
+        return 2
+
+
+def process_case_1975_mirah(x):
+    if x[0] == 1966:
+        return 3
+    elif x[0] == 1981:
+        return 4
+    elif x[0] == 1972:
+        return 5
+
+
+def process_case_1992(x):
+    if x[0] == 1966:
+        return process_case_1992_1966(x)
+    elif x[0] == 1981:
+        return process_case_1992_1981(x)
+    elif x[0] == 1972:
+        return 11
+
+
+def process_case_1992_1966(x):
+    if x[2] == "D":
+        return 6
+    elif x[2] == "TERRA":
+        return 7
+    elif x[2] == "RUBY":
+        return 8
+
+
+def process_case_1992_1981(x):
+    if x[3] == "RUBY":
+        return 9
+    elif x[3] == "MIRAH":
+        return 10
