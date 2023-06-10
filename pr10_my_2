@@ -1,0 +1,102 @@
+class MealyError(Exception):
+    def __init__(self, method_name):
+        self.method_name = method_name
+
+
+class StateMachine:
+    state = 'A'
+
+    def slip(self):
+        if self.state == 'A':
+            self.state = 'B'
+            return 0
+        elif self.state == 'B':
+            self.state = 'F'
+            return 3
+        elif self.state == 'D':
+            self.state = 'E'
+            return 5
+        else:
+            raise (MealyError('slip'))
+
+    def print(self):
+        if self.state == 'A':
+            return 1
+        elif self.state == 'C':
+            self.state = 'D'
+            return 4
+        elif self.state == 'E':
+            self.state = 'C'
+            return 8
+        elif self.state == 'F':
+            self.state = 'G'
+            return 9
+        else:
+            raise (MealyError('print'))
+
+    def play(self):
+        if self.state == 'B':
+            self.state = 'C'
+            return 2
+        elif self.state == 'D':
+            return 6
+        elif self.state == 'E':
+            self.state = 'F'
+            return 7
+        else:
+            raise (MealyError('play'))
+
+
+def main():
+    return StateMachine()
+
+
+def test():
+    test_exceptions = [
+        ('A', 'play'),
+        ('B', 'print'),
+        ('C', 'play'),
+        ('C', 'slip'),
+        ('D', 'print'),
+        ('E', 'slip'),
+        ('F', 'slip'),
+        ('F', 'play'),
+        ('G', 'play'),
+        ('G', 'slip'),
+        ('G', 'print'),
+    ]
+    test_result = [
+        ('A', 'slip', 0, 'B'),
+        ('A', 'print', 1, 'A'),
+        ('B', 'play', 2, 'C'),
+        ('B', 'slip', 3, 'F'),
+        ('C', 'print', 4, 'D'),
+        ('D', 'slip', 5, 'E'),
+        ('D', 'play', 6, 'D'),
+        ('E', 'play', 7, 'F'),
+        ('E', 'print', 8, 'C'),
+        ('F', 'print', 9, 'G'),
+    ]
+    sm = main()
+    for start_state, action in test_exceptions:
+        sm.state = start_state
+        try:
+            if action == 'slip':
+                sm.slip()
+            elif action == 'print':
+                sm.print()
+            else:
+                sm.play()
+        except MealyError:
+            pass
+    for start_state, action, expected_return, expected_state in test_result:
+        sm.state = start_state
+        if action == 'slip':
+            assert sm.slip() == expected_return
+            assert sm.state == expected_state
+        elif action == 'print':
+            assert sm.print() == expected_return
+            assert sm.state == expected_state
+        else:
+            assert sm.play() == expected_return
+            assert sm.state == expected_state
